@@ -1,0 +1,57 @@
+Nama : Raffael Valentino Gunawan
+NIM : 00000091170
+
+1. MVVM penting karena memisahkan tampilan (UI) dan logic bisnis sehingga kode menjadi lebih terstruktur, mudah diuji, dan mudah dikembangkan. Perubahan pada UI tidak akan mempengaruhi business logic, begitu juga sebaliknya. MVVM juga membantu ketika aplikasi makin kompleks dan menggunakan banyak data. Pembagian komponen pada project:
+Model:
+- Movie.kt
+- MovieRepository.kt
+- MovieService.kt
+- MovieDao.kt
+- MovieDatabase.kt
+
+View:
+- activity_main.xml
+- MainActivity.kt
+- RecyclerView Adapter (MovieAdapter.kt)
+- Layout XML lainnya
+
+ViewModel:
+- MovieViewModel.kt
+ViewModel menghubungkan View dan Model melalui LiveData/StateFlow.
+
+2. Data Binding lebih efisien dibanding metode biasa (findViewById/observe manual) karena:
+- Menghilangkan boilerplate code untuk update UI.
+- UI secara otomatis mengikuti data menggunakan LiveData/StateFlow.
+- View langsung terhubung dengan ViewModel melalui binding variable.
+- Tidak perlu memanggil adapter.addMovies() secara manual.
+- Meningkatkan kecepatan development dan mengurangi potensi error NullPointer.
+Dengan Data Binding, perubahan data akan langsung muncul di UI tanpa kode tambahan.
+
+3. Singleton penting untuk Database karena:
+- Hanya ada satu instance Room Database di seluruh aplikasi.
+- Menghindari race condition ketika multi-thread mengakses database.
+- Mencegah pemborosan memory, karena membuat instance database mahal.
+- Menjaga data consistency dan mencegah korupsi data.
+- Menyederhanakan akses database melalui MovieDatabase.getInstance().
+Tanpa Singleton, maka bisa terjadi konflik saat operasi insert/read dilakukan seara bersamaan.
+
+4. Repository Pattern penting karena:
+- Menjadi abstraksi yang mengatur sumber data (API dan Room).
+- UI tidak perlu tahu data berasal dari internet atau database lokal.
+- Memungkinkan aplikasi bisa bekerja offline (cached data).
+- Memudahkan maintenance jika data source berubah di masa depan.
+- Menghindari duplikasi logic untuk get/save data di banyak tempat.
+- Mendukung separation of concerns, MVVM menjadi lebih bersih.
+Dengan Repository, seluruh data logic berada di satu tempat terpisah.
+
+5. Ya, ada beberapa cara lain untuk refresh database selain WorkManager:
+- Firebase Cloud Messaging (FCM): Server mengirim notifikasi ketika ada data baru.
+- AlarmManager: Menjadwalkan task periodik, tapi kurang efektif dibanding WorkManager.
+- Foreground Service: Mengambil data terus menerus, tetapi boros battery.
+- Manual refresh: User melakukan pull-to-refresh di UI.
+- App Startup logic: Saat aplikasi dibuka, lakukan fetch ke API.
+
+Namun, WorkManager adalah cara terbaik karena:
+- Bisa berjalan walaupun app ditutup.
+- Bisa dijadwalkan dengan constraint (misal butuh internet).
+- Reliability pada background task.
